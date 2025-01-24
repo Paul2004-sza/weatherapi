@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌈 Weather Now</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #6dd5ed, #2193b0);
+            color: white;
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        header {
+            background: rgba(0, 0, 0, 0.2);
+            width: 100%;
+            padding: 20px 0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        main {
+            width: 100%;
+            max-width: 800px;
+        }
+
+        input, button {
+            font-size: 18px;
+            border: none;
+            outline: none;
+            border-radius: 20px;
+            padding: 12px 20px;
+            margin: 5px;
+        }
+
+        input {
+            width: 300px;
+            background-color: #f3f3f3;
+            color: #333;
+        }
+
+        button {
+            background-color: #ff7b54;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #ff5a36;
+        }
+
+        section {
+            background: rgba(255, 255, 255, 0.8);
+            color: #333;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px;
+        }
+
+        h1, h2, p {
+            margin-bottom: 15px;
+        }
+
+        footer {
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            width: 100%;
+            text-align: center;
+        }
+
+        footer a {
+            color: #ff7b54;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🌤️ Weather Now</h1>
+        <p>Your trusted source for live weather and forecasts</p>
+    </header>
+
+    <main>
+        <section>
+            <form method="POST">
+                <input type="text" name="city" placeholder="Enter a city" required>
+                <button type="submit">Get Weather 🌍</button>
+            </form>
+        </section>
+
+        {% if weather_data %}
+            <section>
+                {% if 'error' in weather_data %}
+                    <p style="color: red; font-size: 1.2rem;">🚫 {{ weather_data.error }}</p>
+                {% else %}
+                    <h2>{{ weather_data.city }}</h2>
+                    <img src="{{ weather_data.icon_url }}" alt="Weather Icon" style="width: 100px; margin-bottom: 15px;">
+                    <p style="font-size: 1.5rem;">🌡️ {{ weather_data.temp_c }} | {{ weather_data.temp_f }}</p>
+                    <p style="font-size: 1.2rem; font-weight: bold;">{{ weather_data.description }}</p>
+                    {% if weather_image %}
+                        <img src="{{ weather_image }}" alt="Custom Weather Image" style="margin-top: 15px;">
+                    {% endif %}
+                {% endif %}
+            </section>
+        {% endif %}
+
+        {% if prediction_plot %}
+            <section>
+                <h2>📊 5-Day Weather Forecast</h2>
+                <img src="{{ prediction_plot }}" alt="Forecast Graph">
+            </section>
+        {% endif %}
+    </main>
+
+    <footer>
+        <p>🌍 Powered by <a href="https://openweathermap.org/" target="_blank">OpenWeatherMap API</a></p>
+    </footer>
+</body>
+</html>

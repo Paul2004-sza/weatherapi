@@ -1,93 +1,126 @@
-import customtkinter as ctk
-from PIL import Image
+from flask import Flask, render_template, request
 import requests
-import io
 from dotenv import load_dotenv
 import os
+import matplotlib.pyplot as plt
+import io
+import base64
+from urllib.parse import quote
+
+app = Flask(__name__)
+
+# Load environment variables from .env
+load_dotenv()
+
+# Ensure the WEATHER_API_KEY is set in the .env file
+my_api = os.getenv('WEATHER_API_KEY')
+if not my_api:
+    raise ValueError("API key is missing! Please set the WEATHER_API_KEY in the .env file.")
+
+# Define a dictionary to map weather descriptions to local image paths
+weather_images = {
+    "clear sky": "static/images/sunny.jpg",
+    "few clouds": "static/images/partly_cloudy.jpg",
+    "scattered clouds": "static/images/cloudy.jpg",
+    "broken clouds": "static/images/broken_cloudy.jpg",
+    "shower rain": "static/images/rainy_shower.jpg",
+    "rain": "static/images/rainy.jpg",
+    "thunderstorm": "static/images/thunderstorm.jpg",
+    "snow": "static/images/snowy.jpg",
+    "mist": "static/images/misty.jpg",
+    "overcast clouds": "static/images/overcastcloud.jpg",
+}
 
 
-class WeatherApp:
-    def __init__(self, root):
-        self.root = root  # Store the root window as an instance variable
-        ctk.set_appearance_mode("dark")
-        root.geometry("600x400")
-        root.title("WEATHER DATA")
+# Helper functions for temperature conversion
+def kelvin_to_celsius(k):
+    return k - 273.15
 
-        self.title_label = ctk.CTkLabel(root, text="Weather Data", font=ctk.CTkFont(size=30, weight="bold"))
-        self.title_label.pack(padx=10, pady=10)
 
-        self.weather_frame = ctk.CTkFrame(root)
-        self.weather_frame.pack(fill='x', padx=50, pady=10)
+def kelvin_to_fahrenheit(k):
+    return (kelvin_to_celsius(k) * 9 / 5) + 32
 
-        self.entry = ctk.CTkEntry(self.weather_frame, placeholder_text="Enter the city...")
-        self.entry.pack(side='left', padx=80, pady=20)
 
-        self.command_button = ctk.CTkButton(self.weather_frame, text='Get Weather Data', command=self.get_weather)
-        self.command_button.pack(side='left', padx=20, pady=20)
+@app.route("/", methods=["GET", "POST"])
+def index():
+    weather_data = None
+    prediction_plot = None
+    weather_image = None  # Variable to store the local image path
+    icon_url = None  # Variable to store the dynamic icon URL
 
-        self.weather_clear = ctk.CTkFrame(root)
-        self.weather_clear.pack(fill='x', padx=50,pady=5)
+    if request.method == "POST":
+        city = request.form.get("city").strip()
 
-        self.clear = ctk.CTkButton(self.weather_clear, text="Clear", command=self.clear_data)
-        self.clear.pack(side='bottom', pady=(10, 10))
+        # Encode the city name for URLs (to handle special characters)
+        city_encoded = quote(city)
 
-        self.result = ctk.CTkLabel(root, text="")
-        self.result.pack()
-
-        self.weather_icon_label = None  # Initialize the icon label
-
-    def get_weather(self):
-        city = self.entry.get().upper().strip()
-        load_dotenv()
-        my_api = os.getenv('WEATHER_API_KEY')
-        url = f'http://api.openweathermap.org/data/2.5/weather?q={city}&appid={my_api}'
+        # Fetch current weather data
+        url = f'http://api.openweathermap.org/data/2.5/weather?q={city_encoded}&appid={my_api}'
         response = requests.get(url)
 
         if response.status_code == 200:
             weather_data = response.json()
-
             temperature = weather_data['main']['temp']
-            tem_c = (temperature - 273.15)
+            tem_c = kelvin_to_celsius(temperature)  # Convert Kelvin to Celsius
             temp_c = f"{tem_c:.2f}°C"
-            tem_f = (tem_c * 9 / 5) + 32
-            tem_f = f"{tem_f:.2f}°F"
-
+            tem_f = kelvin_to_fahrenheit(temperature)  # Convert to Fahrenheit
+            temp_f = f"{tem_f:.2f}°F"
             description = weather_data['weather'][0]['description'].capitalize()
-            icon_code = weather_data['weather'][0]['icon']
-            icon_url = f"http://openweathermap.org/img/wn/{icon_code}@2x.png"
+            icon_code = weather_data['weather'][0]['icon']  # Get the icon code from the API
+            icon_url = f"http://openweathermap.org/img/wn/{icon_code}@4x.png"  # Generate the icon URL
 
-            # Fetch the icon
-            icon_response = requests.get(icon_url)
-            if icon_response.status_code == 200:
-                image_data = icon_response.content
-                icon_image = Image.open(io.BytesIO(image_data))
+            # Get the appropriate local image based on the weather description
+            weather_image = weather_images.get(description.lower(), "static/images/default.jpg")
 
-                # Convert to CTkImage
-                ctk_image = ctk.CTkImage(light_image=icon_image, dark_image=icon_image, size=(200, 200))
+            weather_data = {
+                'city': city.upper(),
+                'description': description,
+                'temp_c': temp_c,
+                'temp_f': temp_f,
+                'icon_url': icon_url  # Include the dynamic icon URL in the data
+            }
 
-                # Display the icon in a label
-                if self.weather_icon_label:
-                    self.weather_icon_label.destroy()  # Destroy the previous icon if it exists
+            # Fetch 5-day forecast data
+            forecast_url = f'http://api.openweathermap.org/data/2.5/forecast?q={city_encoded}&appid={my_api}'
+            forecast_response = requests.get(forecast_url)
+            if forecast_response.status_code == 200:
+                forecast_data = forecast_response.json()
+                # Extract temperature data for prediction (next 5 days)
+                temperatures = []
+                dates = []
+                for entry in forecast_data['list']:
+                    # We take one data point per day (12 PM)
+                    if entry['dt_txt'].endswith("12:00:00"):
+                        date = entry['dt_txt'].split()[0]
+                        temp = kelvin_to_celsius(entry['main']['temp'])  # Convert to Celsius
+                        temperatures.append(temp)
+                        dates.append(date)
 
-                self.weather_icon_label = ctk.CTkLabel(self.root, image=ctk_image)
-                self.weather_icon_label.image = ctk_image  # Prevent garbage collection
-                self.weather_icon_label.pack(pady=10)
+                # Create temperature prediction plot
+                fig, ax = plt.subplots()
+                ax.plot(dates, temperatures, marker='o', linestyle='-', color='#4CAF50', linewidth=2)
+                ax.set(xlabel='Date', ylabel='Temperature (°C)', title=f'Temperature Predictions for {city}')
+                ax.grid(True, linestyle='--', alpha=0.5)
 
-            get = (f"Current weather in {city} city:\n"
-                   f"Description: {description}\n"
-                   f"Temperature: {temp_c} / {tem_f}")
-            self.result.configure(text=get, text_color="green", font=ctk.CTkFont(size=20, weight='bold'))
+                # Annotate each point with its temperature value
+                for i, temp in enumerate(temperatures):
+                    ax.text(dates[i], temp, f"{temp:.1f}°C", fontsize=9, ha='center', va='bottom')
+
+                plt.xticks(rotation=45)
+                plt.tight_layout()
+
+                # Save plot to a BytesIO object and encode it as base64 to embed in HTML
+                img = io.BytesIO()
+                plt.savefig(img, format='png')
+                img.seek(0)
+                plot_url = base64.b64encode(img.getvalue()).decode('utf8')
+                prediction_plot = f"data:image/png;base64,{plot_url}"
         else:
-            self.result.configure(text=f"Error fetching weather data for '{city}'.\n"
-                                       f" Please check the city name!", text_color="orange",font=ctk.CTkFont(size=15, weight='bold'))
+            weather_data = {'error': "Error fetching weather data. Please check the city name!"}
 
-    def clear_data(self):
-        self.entry.delete(0, ctk.END)
-        self.result.configure(text="")
-        if self.weather_icon_label:
-            self.weather_icon_label.destroy()
+    return render_template("index.html", weather_data=weather_data, prediction_plot=prediction_plot,
+                           weather_image=weather_image, icon_url=icon_url)
 
-if __name__ == '__main__':
-    window = ctk.CTk()
-    app = WeatherApp(window)
-    window.mainloop()
+
+if __name__ == "__main__":
+    app.run(debug=True)
