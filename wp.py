@@ -35,7 +35,7 @@ class WeatherApp:
 
     def get_weather(self):
         city = self.entry.get().upper().strip()
-        my_api = 'weatherapi'
+        my_api = 'ef25ec4b02a9209c29f3e8a1ea079edc'
         url = f'http://api.openweathermap.org/data/2.5/weather?q={city}&appid={my_api}'
         response = requests.get(url)
 
