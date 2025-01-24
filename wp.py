@@ -9,15 +9,14 @@ from urllib.parse import quote
 
 app = Flask(__name__)
 
-# Load environment variables from .env
 load_dotenv()
 
-# Ensure the WEATHER_API_KEY is set in the .env file
+
 my_api = os.getenv('WEATHER_API_KEY')
 if not my_api:
     raise ValueError("API key is missing! Please set the WEATHER_API_KEY in the .env file.")
 
-# Define a dictionary to map weather descriptions to local image paths
+
 weather_images = {
     "clear sky": "static/images/sunny.jpg",
     "few clouds": "static/images/partly_cloudy.jpg",
@@ -32,7 +31,6 @@ weather_images = {
 }
 
 
-# Helper functions for temperature conversion
 def kelvin_to_celsius(k):
     return k - 273.15
 
@@ -45,16 +43,16 @@ def kelvin_to_fahrenheit(k):
 def index():
     weather_data = None
     prediction_plot = None
-    weather_image = None  # Variable to store the local image path
-    icon_url = None  # Variable to store the dynamic icon URL
+    weather_image = None
+    icon_url = None
 
     if request.method == "POST":
         city = request.form.get("city").strip()
 
-        # Encode the city name for URLs (to handle special characters)
+
         city_encoded = quote(city)
 
-        # Fetch current weather data
+
         url = f'http://api.openweathermap.org/data/2.5/weather?q={city_encoded}&appid={my_api}'
         response = requests.get(url)
 
@@ -66,10 +64,8 @@ def index():
             tem_f = kelvin_to_fahrenheit(temperature)  # Convert to Fahrenheit
             temp_f = f"{tem_f:.2f}°F"
             description = weather_data['weather'][0]['description'].capitalize()
-            icon_code = weather_data['weather'][0]['icon']  # Get the icon code from the API
-            icon_url = f"http://openweathermap.org/img/wn/{icon_code}@4x.png"  # Generate the icon URL
-
-            # Get the appropriate local image based on the weather description
+            icon_code = weather_data['weather'][0]['icon']
+            icon_url = f"http://openweathermap.org/img/wn/{icon_code}@4x.png"
             weather_image = weather_images.get(description.lower(), "static/images/default.jpg")
 
             weather_data = {
@@ -77,7 +73,7 @@ def index():
                 'description': description,
                 'temp_c': temp_c,
                 'temp_f': temp_f,
-                'icon_url': icon_url  # Include the dynamic icon URL in the data
+                'icon_url': icon_url
             }
 
             # Fetch 5-day forecast data
@@ -96,20 +92,20 @@ def index():
                         temperatures.append(temp)
                         dates.append(date)
 
-                # Create temperature prediction plot
+
                 fig, ax = plt.subplots()
                 ax.plot(dates, temperatures, marker='o', linestyle='-', color='#4CAF50', linewidth=2)
                 ax.set(xlabel='Date', ylabel='Temperature (°C)', title=f'Temperature Predictions for {city}')
                 ax.grid(True, linestyle='--', alpha=0.5)
 
-                # Annotate each point with its temperature value
+
                 for i, temp in enumerate(temperatures):
                     ax.text(dates[i], temp, f"{temp:.1f}°C", fontsize=9, ha='center', va='bottom')
 
                 plt.xticks(rotation=45)
                 plt.tight_layout()
 
-                # Save plot to a BytesIO object and encode it as base64 to embed in HTML
+
                 img = io.BytesIO()
                 plt.savefig(img, format='png')
                 img.seek(0)
