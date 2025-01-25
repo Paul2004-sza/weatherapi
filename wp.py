@@ -7,13 +7,11 @@ from urllib.parse import quote
 
 app = Flask(__name__)
 
-# Load API key
 load_dotenv()
 my_api = os.getenv('WEATHER_API_KEY')
 if not my_api:
     raise ValueError("API key is missing! Please set the WEATHER_API_KEY in the .env file.")
 
-# Weather images mapping
 weather_images = {
     "clear sky": "static/images/sunny.jpg",
     "few clouds": "static/images/partly_cloudy.jpg",
@@ -27,7 +25,7 @@ weather_images = {
     "overcast clouds": "static/images/overcastcloud.jpg",
 }
 
-# Temperature conversion helpers
+
 def kelvin_to_celsius(k):
     return k - 273.15
 
@@ -36,12 +34,12 @@ def index():
     weather_data = None
     temp_forecast_plot = None
     weather_forecast = []
+    error_message = None
 
     if request.method == "POST":
         city = request.form.get("city").strip()
         city_encoded = quote(city)
 
-        # Fetch current weather data
         current_weather_url = f'http://api.openweathermap.org/data/2.5/weather?q={city_encoded}&appid={my_api}'
         response = requests.get(current_weather_url)
 
@@ -62,13 +60,11 @@ def index():
                 'background_image': background_image
             }
 
-            # Fetch 5-day weather forecast
             forecast_url = f'http://api.openweathermap.org/data/2.5/forecast?q={city_encoded}&appid={my_api}'
             forecast_response = requests.get(forecast_url)
             if forecast_response.status_code == 200:
                 forecast_data = forecast_response.json()
 
-                # Extract data for the next 5 days
                 temperatures = []
                 dates = []
                 for entry in forecast_data['list']:
@@ -84,7 +80,6 @@ def index():
                         temperatures.append(temp)
                         dates.append(date)
 
-                # Create Plotly graph
                 fig = go.Figure()
                 fig.add_trace(go.Scatter(
                     x=dates,
@@ -107,14 +102,16 @@ def index():
                 fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='rgba(255, 255, 255, 0.2)')
                 fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='rgba(255, 255, 255, 0.2)')
 
-                # Convert the graph to an HTML component
                 temp_forecast_plot = fig.to_html(full_html=False, include_plotlyjs='cdn')
+        else:
+            error_message = "City not found! Please try again."
 
     return render_template(
         "index.html",
         weather_data=weather_data,
         temp_forecast_plot=temp_forecast_plot,
-        weather_forecast=weather_forecast
+        weather_forecast=weather_forecast,
+        error_message=error_message
     )
 
 if __name__ == "__main__":

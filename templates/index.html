@@ -26,6 +26,16 @@
             width: 100%;
             padding: 20px 0;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+            position: relative;
+        }
+
+        header .logo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #ff7b54;
         }
 
         main {
@@ -115,12 +125,18 @@
         footer a:hover {
             text-decoration: underline;
         }
+
+        .error-message {
+            color: #ff4d4d;
+            font-size: 1.2rem;
+        }
     </style>
 </head>
 <body style="background: url('{{ weather_data.background_image }}') no-repeat center center fixed; background-size: cover;">
     <header>
         <h1>🌤️ Weather Now</h1>
         <p>Your trusted source for live weather and forecasts</p>
+        <div class="logo">PaulWeb</div>
     </header>
 
     <main>
@@ -129,6 +145,9 @@
                 <input type="text" name="city" placeholder="Enter a city" required>
                 <button type="submit">Get Weather 🌍</button>
             </form>
+            {% if error_message %}
+                <p class="error-message">{{ error_message }}</p>
+            {% endif %}
         </section>
 
         {% if weather_data %}
