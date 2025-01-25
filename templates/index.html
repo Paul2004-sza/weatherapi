@@ -10,7 +10,6 @@
             margin: 0;
             padding: 0;
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #6dd5ed, #2193b0);
             color: white;
             text-align: center;
             min-height: 100vh;
@@ -18,6 +17,8 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            background: url('static/images/default.jpg') no-repeat center center fixed;
+            background-size: cover;
         }
 
         header {
@@ -73,8 +74,29 @@
             border-radius: 15px;
         }
 
-        h1, h2, p {
-            margin-bottom: 15px;
+        .carousel-container {
+            overflow-x: auto;
+            display: flex;
+            gap: 15px;
+            padding: 10px;
+            margin: 0 auto;
+            scroll-behavior: smooth;
+        }
+
+        .forecast-item {
+            background: white;
+            border-radius: 15px;
+            padding: 15px;
+            min-width: 200px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            flex: 0 0 auto;
+            transition: transform 0.3s ease;
+        }
+
+        .forecast-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
         }
 
         footer {
@@ -95,7 +117,7 @@
         }
     </style>
 </head>
-<body>
+<body style="background: url('{{ weather_data.background_image }}') no-repeat center center fixed; background-size: cover;">
     <header>
         <h1>🌤️ Weather Now</h1>
         <p>Your trusted source for live weather and forecasts</p>
@@ -111,24 +133,35 @@
 
         {% if weather_data %}
             <section>
-                {% if 'error' in weather_data %}
-                    <p style="color: red; font-size: 1.2rem;">🚫 {{ weather_data.error }}</p>
-                {% else %}
-                    <h2>{{ weather_data.city }}</h2>
-                    <img src="{{ weather_data.icon_url }}" alt="Weather Icon" style="width: 100px; margin-bottom: 15px;">
-                    <p style="font-size: 1.5rem;">🌡️ {{ weather_data.temp_c }} | {{ weather_data.temp_f }}</p>
-                    <p style="font-size: 1.2rem; font-weight: bold;">{{ weather_data.description }}</p>
-                    {% if weather_image %}
-                        <img src="{{ weather_image }}" alt="Custom Weather Image" style="margin-top: 15px;">
-                    {% endif %}
-                {% endif %}
+                <h2>{{ weather_data.city }}</h2>
+                <img src="{{ weather_data.icon_url }}" alt="Weather Icon" style="width: 100px; margin-bottom: 15px;">
+                <p style="font-size: 1.5rem;">🌡️ {{ weather_data.temp_c }}</p>
+                <p style="font-size: 1.2rem; font-weight: bold;">{{ weather_data.description }}</p>
             </section>
         {% endif %}
 
-        {% if prediction_plot %}
+        {% if weather_forecast %}
             <section>
-                <h2>📊 5-Day Weather Forecast</h2>
-                <img src="{{ prediction_plot }}" alt="Forecast Graph">
+                <h2>📊 5-Day Weather Conditions</h2>
+                <div class="carousel-container">
+                    {% for forecast in weather_forecast %}
+                        <div class="forecast-item">
+                            <p><strong>{{ forecast.date }}</strong></p>
+                            <img src="{{ forecast.icon }}" alt="Weather Icon">
+                            <p>{{ forecast.description }}</p>
+                            <p>🌡️ {{ forecast.temp }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+        {% endif %}
+
+        {% if temp_forecast_plot %}
+            <section>
+                <h2>📊 5-Day Temperature Forecast</h2>
+                <div>
+                    {{ temp_forecast_plot | safe }}
+                </div>
             </section>
         {% endif %}
     </main>
