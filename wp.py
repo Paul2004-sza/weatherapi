@@ -13,16 +13,16 @@ class WeatherApp:
             raise ValueError("API key is missing! Please set the WEATHER_API_KEY in the .env file.")
 
         self.weather_images = {
-            "clear sky": "static/images/sunny.jpg",
-            "few clouds": "static/images/partly_cloudy.jpg",
-            "scattered clouds": "static/images/cloudy.jpg",
-            "broken clouds": "static/images/broken_cloudy.jpg",
-            "shower rain": "static/images/rainy_shower.jpg",
-            "rain": "static/images/rainy.jpg",
-            "thunderstorm": "static/images/thunderstorm.jpg",
-            "snow": "static/images/snowy.jpg",
-            "mist": "static/images/misty.jpg",
-            "overcast clouds": "static/images/overcastcloud.jpg",
+            "clear sky": "images/sunny.jpg",
+            "few clouds": "images/partly_cloudy.jpg",
+            "scattered clouds": "images/cloudy.jpg",
+            "broken clouds": "images/broken_cloudy.jpg",
+            "shower rain": "images/rainy_shower.jpg",
+            "rain": "images/rainy.jpg",
+            "thunderstorm": "images/thunderstorm.jpg",
+            "snow": "images/snowy.jpg",
+            "mist": "images/misty.jpg",
+            "overcast clouds": "images/overcastcloud.jpg",
         }
 
     @staticmethod
@@ -96,7 +96,7 @@ class WeatherApp:
 app = Flask(__name__)
 weather_app = WeatherApp()
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/", methods=["GET", "POST"]) # url path directly
 def index():
     weather_data = None
     temp_forecast_plot = None
@@ -121,6 +121,23 @@ def index():
         weather_forecast=weather_forecast,
         error_message=error_message
     )
+
+# Portfolio route
+@app.route("/portfolio")
+def portfolio():
+    return render_template("index1.html")
+
+# Direct routes for all other HTML pages
+@app.route("/<page>")
+def other_pages(page):
+    allowed_pages = [
+        "Resume.html", "Modify.html", "Geolocation.html",
+        "unit_converter_.html", "grade_.html",
+        "Calculate_the_change_.html", "Hobby.html"
+    ]
+    if page in allowed_pages:
+        return render_template(page)
+    return "Page not found", 404
 
 if __name__ == "__main__":
     app.run(debug=True)

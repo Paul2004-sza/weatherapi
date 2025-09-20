@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Unit Converter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Mobile friendly -->
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      margin: 0;
+      padding: 20px;
+      color: #2c3e50;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+
+    h2 {
+      margin-top: 20px;
+      font-size: 20px;
+      border-bottom: 2px solid #eee;
+      padding-bottom: 5px;
+      color: #34495e;
+    }
+
+    .back-btn {
+      display: inline-block;
+      padding: 12px 20px;
+      background: #2c3e50;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .back-btn:hover {
+      background: #34495e;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    button {
+      background: #2c3e50;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #34495e;
+    }
+
+    p {
+      font-size: 16px;
+      font-weight: bold;
+      margin-top: 10px;
+      color: #27ae60;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+      h1 {
+        font-size: 20px;
+      }
+      h2 {
+        font-size: 18px;
+      }
+      input, select, button {
+        font-size: 15px;
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="{{ url_for('portfolio') }}" class="back-btn">Back to Home</a>
+    <h1>📏 Unit Converter</h1>
+
+    <!-- Length Converter -->
+    <h2>Length</h2>
+    <input type="number" id="lengthValue" placeholder="Enter value">
+    <select id="lengthOption">
+      <option value="m_to_ft">Meters → Feet</option>
+      <option value="ft_to_m">Feet → Meters</option>
+    </select>
+    <button onclick="convertLength()">Convert</button>
+    <p id="lengthResult"></p>
+
+    <!-- Height Converter -->
+    <h2>Height</h2>
+    <input type="number" id="heightValue" placeholder="Enter value">
+    <select id="heightOption">
+      <option value="cm_to_in">Centimeters → Inches</option>
+      <option value="in_to_cm">Inches → Centimeters</option>
+    </select>
+    <button onclick="convertHeight()">Convert</button>
+    <p id="heightResult"></p>
+
+    <!-- Temperature Converter -->
+    <h2>Temperature</h2>
+    <input type="number" id="tempValue" placeholder="Enter value">
+    <select id="tempOption">
+      <option value="c_to_f">Celsius → Fahrenheit</option>
+      <option value="f_to_c">Fahrenheit → Celsius</option>
+    </select>
+    <button onclick="convertTemperature()">Convert</button>
+    <p id="tempResult"></p>
+
+    <!-- Area Converter -->
+    <h2>Area</h2>
+    <input type="number" id="areaValue" placeholder="Enter value">
+    <select id="areaOption">
+      <option value="sqm_to_sqft">Square Meters → Square Feet</option>
+      <option value="sqft_to_sqm">Square Feet → Square Meters</option>
+    </select>
+    <button onclick="convertArea()">Convert</button>
+    <p id="areaResult"></p>
+  </div>
+
+  <script>
+    function convertLength() {
+      let value = parseFloat(document.getElementById("lengthValue").value);
+      let option = document.getElementById("lengthOption").value;
+      if (isNaN(value)) return;
+      let result = option === "m_to_ft"
+        ? `${value} meters = ${(value * 3.28084).toFixed(2)} feet`
+        : `${value} feet = ${(value / 3.28084).toFixed(2)} meters`;
+      document.getElementById("lengthResult").innerHTML = result;
+    }
+
+    function convertHeight() {
+      let value = parseFloat(document.getElementById("heightValue").value);
+      let option = document.getElementById("heightOption").value;
+      if (isNaN(value)) return;
+      let result = option === "cm_to_in"
+        ? `${value} cm = ${(value / 2.54).toFixed(2)} inches`
+        : `${value} inches = ${(value * 2.54).toFixed(2)} cm`;
+      document.getElementById("heightResult").innerHTML = result;
+    }
+
+    function convertTemperature() {
+      let value = parseFloat(document.getElementById("tempValue").value);
+      let option = document.getElementById("tempOption").value;
+      if (isNaN(value)) return;
+      let result = option === "c_to_f"
+        ? `${value}°C = ${((value * 9/5) + 32).toFixed(2)}°F`
+        : `${value}°F = ${(((value - 32) * 5/9).toFixed(2))}°C`;
+      document.getElementById("tempResult").innerHTML = result;
+    }
+
+    function convertArea() {
+      let value = parseFloat(document.getElementById("areaValue").value);
+      let option = document.getElementById("areaOption").value;
+      if (isNaN(value)) return;
+      let result = option === "sqm_to_sqft"
+        ? `${value} m² = ${(value * 10.7639).toFixed(2)} ft²`
+        : `${value} ft² = ${(value / 10.7639).toFixed(2)} m²`;
+      document.getElementById("areaResult").innerHTML = result;
+    }
+
+    // Enable Enter key
+    ["lengthValue","heightValue","tempValue","areaValue"].forEach(id => {
+      document.getElementById(id).addEventListener("keydown", e => {
+        if(e.key === "Enter") {
+          if(id==="lengthValue") convertLength();
+          if(id==="heightValue") convertHeight();
+          if(id==="tempValue") convertTemperature();
+          if(id==="areaValue") convertArea();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

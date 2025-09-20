@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SUT ZAW AUNG (Student KBU) Portfolio</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+    header {
+      background: rgba(255, 255, 255, 0.8);
+      width: 100%;
+      text-align: center;
+      padding: 30px 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      color: #2c3e50;
+    }
+    header p {
+      margin-top: 8px;
+      font-size: 1.1rem;
+      color: #555;
+    }
+    main {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 20px 40px 40px 40px;
+      width: 90%;
+      max-width: 1000px;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+    }
+    .card a {
+      display: block;
+      text-decoration: none;
+      color: #2c3e50;
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    .card p {
+      font-size: 0.95rem;
+      color: #666;
+      line-height: 1.4;
+    }
+    .back-button {
+      margin: 20px 0;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      background-color: #2c3e50;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .back-button:hover {
+      background-color: #1a2533;
+    }
+    footer {
+      margin-top: auto;
+      padding: 20px;
+      font-size: 0.9rem;
+      color: #444;
+      background: rgba(255,255,255,0.6);
+      width: 100%;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>SUT ZAW AUNG (Student KBU) Portfolio</h1>
+    <p>All my projects in one place – click a card to explore!</p>
+  </header>
+
+  <!-- Back to Weather Button -->
+  <button class="back-button" onclick="window.location.href='/'">🌤️ Back to Weather Forecast</button>
+
+  <main>
+    <div class="card">
+      <a href="Resume.html">📄 Resume</a>
+      <p>My personal resume with education, experience, and skills.</p>
+    </div>
+
+    <div class="card">
+      <a href="Modify.html">⚙️ Useful Tools (Modify)</a>
+      <p>A collection of tools including converter, grade calculator, and change finder.</p>
+    </div>
+
+    <div class="card">
+      <a href="Geolocation.html">📍 Geolocation</a>
+      <p>Find distance from KBU University using geolocation features.</p>
+    </div>
+
+    <div class="card">
+      <a href="unit_converter_.html">🔢 Unit Converter</a>
+      <p>A useful tool to convert between different measurement units.</p>
+    </div>
+
+    <div class="card">
+      <a href="grade_.html">🎓 Grade Calculator</a>
+      <p>Enter scores and calculate grades automatically.</p>
+    </div>
+
+    <div class="card">
+      <a href="Calculate_the_change_.html">💰 Calculate the Change (THB)</a>
+      <p>A calculator to find the change in Thai Baht.</p>
+    </div>
+
+    <div class="card">
+      <a href="Hobby.html">🎨 My Hobbies</a>
+      <p>A fun page showcasing my personal hobbies and interests.</p>
+    </div>
+  </main>
+
+  <footer>
+    © 2025 KBU 251 DTI224 Sec321
+  </footer>
+</body>
+</html>

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>All-in-One Calculator</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      animation: fadeIn 0.6s ease-in-out;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-bottom: 15px;
+      outline: none;
+      transition: 0.3s;
+    }
+
+    input:focus, select:focus {
+      border-color: #007bff;
+      box-shadow: 0 0 8px rgba(0,123,255,0.4);
+    }
+
+    button {
+      padding: 12px 20px;
+      background: linear-gradient(135deg, #007bff, #0056b3);
+      border: none;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 8px;
+      margin: 5px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .danger {
+      background: linear-gradient(135deg, #f44336, #b71c1c);
+    }
+
+    #result {
+      font-size: 18px;
+      font-weight: bold;
+      min-height: 30px;
+      margin-top: 10px;
+      color: #28a745;
+      white-space: pre-line;
+    }
+
+    .error {
+      color: #d9534f !important;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .back-btn {
+      display: inline-block;
+      padding: 10px 20px;
+      background: #2c3e50;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    .back-btn:hover {
+      background: #34495e;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Main Menu -->
+    <div id="menu">
+      <a href="{{ url_for('portfolio') }}" class="back-btn">Back to Home</a>
+      <h1>All-in-One Tools</h1>
+      <button onclick="showPage('grade')">Grade Calculator</button>
+      <button onclick="showPage('unit')">Unit Converter</button>
+      <button onclick="showPage('change')">Change Calculator</button>
+    </div>
+
+    <!-- Grade Calculator -->
+    <div id="grade" class="hidden">
+      <h1>Grade Calculator</h1>
+      <input type="number" id="scoreInput" placeholder="Enter your score" />
+      <button onclick="calculateGrade()">Submit</button>
+      <button onclick="resetGrade()" class="danger">Back</button>
+      <div id="resultGrade"></div>
+      <br>
+      <button onclick="historyBack()">History Back</button>
+    </div>
+
+    <!-- Unit Converter -->
+    <div id="unit" class="hidden">
+      <h1>Unit Converter</h1>
+      <select id="conversionType">
+        <option value="" disabled selected>Select conversion type</option>
+        <option value="length_m_to_ft">Length (Meters → Feet)</option>
+        <option value="length_ft_to_m">Length (Feet → Meters)</option>
+        <option value="height_cm_to_inch">Height (Centimeters → Inches)</option>
+        <option value="height_inch_to_cm">Height (Inches → Centimeters)</option>
+        <option value="temp_c_to_f">Temperature (Celsius → Fahrenheit)</option>
+        <option value="temp_f_to_c">Temperature (Fahrenheit → Celsius)</option>
+        <option value="area_sqm_to_sqft">Area (Square Meters → Square Feet)</option>
+        <option value="area_sqft_to_sqm">Area (Square Feet → Square Meters)</option>
+      </select>
+      <input type="number" id="inputValue" placeholder="Enter value" />
+      <button onclick="convert()">Convert</button>
+      <button onclick="resetUnit()" class="danger">Back</button>
+      <div id="resultUnit"></div>
+      <br>
+      <button onclick="historyBack()">History Back</button>
+    </div>
+
+    <!-- Change Calculator -->
+    <div id="change" class="hidden">
+      <h1>Change Calculator</h1>
+      <input type="number" id="amount" placeholder="Enter Amount" />
+      <button onclick="calculateChange()">Submit</button>
+      <button onclick="resetChange()" class="danger">Back</button>
+      <div id="resultChange"></div>
+      <br>
+      <button onclick="historyBack()">History Back</button>
+    </div>
+  </div>
+
+<script>
+  // Page Navigation
+  function showPage(page) {
+    document.getElementById("menu").classList.add("hidden");
+    document.getElementById(page).classList.remove("hidden");
+  }
+  function historyBack() {
+    document.querySelectorAll("#grade, #unit, #change").forEach(div => div.classList.add("hidden"));
+    document.getElementById("menu").classList.remove("hidden");
+  }
+
+  // --- Grade Calculator ---
+  function calculateGrade() {
+    const score = parseInt(document.getElementById("scoreInput").value);
+    const resultEl = document.getElementById("resultGrade");
+
+    if (isNaN(score) || score < 0 || score > 100) {
+      resultEl.textContent = "Please enter a valid score between 0 and 100!";
+      resultEl.classList.add("error");
+      return;
+    }
+
+    resultEl.classList.remove("error");
+    let grade = "";
+    if (score >= 90) grade = "A";
+    else if (score >= 80) grade = "B";
+    else if (score >= 70) grade = "C";
+    else if (score >= 60) grade = "D";
+    else grade = "F";
+
+    resultEl.textContent = `You got "${grade}" grade.`;
+    resultEl.style.color = (grade === "F") ? "#d9534f" : "#28a745";
+  }
+  function resetGrade() {
+    document.getElementById("scoreInput").value = "";
+    document.getElementById("resultGrade").textContent = "";
+  }
+
+  // Trigger Grade Calculator on Enter
+  document.getElementById("scoreInput").addEventListener("keydown", function(e) {
+    if (e.key === "Enter") calculateGrade();
+  });
+
+  // --- Unit Converter ---
+  function validateInput(value, minAllowed = null) {
+    if (isNaN(value)) return "Please enter a valid number";
+    if (minAllowed !== null && value < minAllowed) return `Value must be ${minAllowed} or greater`;
+    return null;
+  }
+  function convert() {
+    const type = document.getElementById("conversionType").value;
+    const val = parseFloat(document.getElementById("inputValue").value);
+    const resultEl = document.getElementById("resultUnit");
+
+    if (!type) {
+      resultEl.textContent = "Please select a conversion type.";
+      resultEl.classList.add("error");
+      return;
+    }
+    let error = (type.startsWith("temp_")) ? validateInput(val) : validateInput(val, 0);
+    if (error) {
+      resultEl.textContent = error;
+      resultEl.classList.add("error");
+      return;
+    }
+
+    resultEl.classList.remove("error");
+    let output = "";
+    switch(type) {
+      case "length_m_to_ft": output = `${val} m = ${(val * 3.28084).toFixed(2)} ft`; break;
+      case "length_ft_to_m": output = `${val} ft = ${(val / 3.28084).toFixed(2)} m`; break;
+      case "height_cm_to_inch": output = `${val} cm = ${(val / 2.54).toFixed(2)} in`; break;
+      case "height_inch_to_cm": output = `${val} in = ${(val * 2.54).toFixed(2)} cm`; break;
+      case "temp_c_to_f": output = `${val}°C = ${((val*9/5)+32).toFixed(2)}°F`; break;
+      case "temp_f_to_c": output = `${val}°F = ${((val-32)*5/9).toFixed(2)}°C`; break;
+      case "area_sqm_to_sqft": output = `${val} m² = ${(val*10.7639).toFixed(2)} ft²`; break;
+      case "area_sqft_to_sqm": output = `${val} ft² = ${(val/10.7639).toFixed(2)} m²`; break;
+    }
+    resultEl.textContent = output;
+  }
+  function resetUnit() {
+    document.getElementById("conversionType").value = "";
+    document.getElementById("inputValue").value = "";
+    document.getElementById("resultUnit").textContent = "";
+  }
+
+  // Trigger Unit Converter on Enter
+  document.getElementById("inputValue").addEventListener("keydown", function(e) {
+    if (e.key === "Enter") convert();
+  });
+
+  // --- Change Calculator ---
+  function calculateChange() {
+    let amount = parseInt(document.getElementById("amount").value);
+    let resultEl = document.getElementById("resultChange");
+    resultEl.textContent = "";
+    resultEl.classList.remove("error");
+
+    if (isNaN(amount) || amount < 0) {
+      resultEl.textContent = "Please enter a valid positive number.";
+      resultEl.classList.add("error");
+      return;
+    }
+    if (amount === 0) {
+      resultEl.textContent = "Amount is zero. No change needed.";
+      return;
+    }
+
+    const denominations = [500, 100, 50, 20, 1];
+    let output = "";
+    for (let denom of denominations) {
+      let count = Math.floor(amount / denom);
+      if (count > 0) {
+        output += `${count} of ฿${denom}\n`;
+        amount -= count * denom;
+      }
+    }
+    resultEl.textContent = output;
+  }
+  function resetChange() {
+    document.getElementById("amount").value = "";
+    document.getElementById("resultChange").textContent = "";
+  }
+
+  // Trigger Change Calculator on Enter
+  document.getElementById("amount").addEventListener("keydown", function(e) {
+    if (e.key === "Enter") calculateChange();
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Resume - Sut Zaw Aung</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        a {
+            color: #1a73e8;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        h1, h2, h3 {
+            color: #1a1a1a;
+            margin-bottom: 5px;
+        }
+
+        hr {
+            border: none;
+            height: 1px;
+            background-color: #ccc;
+            margin: 10px 0 20px 0;
+        }
+
+        ul {
+            margin-left: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header p {
+            margin: 3px 0;
+        }
+
+        h2 {
+            background-color: #e0e7ff;
+            padding: 8px 15px;
+            border-left: 5px solid #4f46e5;
+            margin-top: 30px;
+        }
+
+        h3 {
+            margin-top: 15px;
+        }
+
+        ul li {
+            padding: 5px 0;
+            transition: 0.3s;
+        }
+
+        ul li:hover {
+            background-color: #f0f4ff;
+            border-left: 3px solid #4f46e5;
+            padding-left: 10px;
+        }
+
+        .badge {
+            background-color: #4f46e5;
+            color: white;
+            padding: 3px 8px;
+            margin-right: 5px;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+
+        /* Back to Home Button */
+        .back-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #2c3e50;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            transition: 0.3s;
+        }
+
+        .back-btn:hover {
+            background: #34495e;
+        }
+    </style>
+</head>
+<body>
+    <a href="{{ url_for('portfolio') }}" class="back-btn">Back to Home</a>
+
+    <div class="header">
+        <h1>SUT ZAW AUNG</h1>
+        <p>Email: sutzawaungnhkum@gmail.com | Phone: (+66) 064-563-2166</p>
+        <p>Address: Thailand/Bangkok</p>
+        <p>
+            GitHub: <a href="https://github.com/Paul2004-sza">github.com/Paul2004-sza</a> |
+            LinkedIn: <a href="https://linkedin.com/in/sut-zaw-aung-686107354">linkedin.com/in/sut-zaw-aung</a>
+        </p>
+    </div>
+
+    <h2>CAREER OBJECTIVE</h2>
+    <p>
+        Enthusiastic and self-driven data analyst with a strong foundation in Python, SQL, and R.
+        Experienced in real-world projects involving banking, marketing, and customer analytics.
+        Passionate about turning data into actionable insights through machine learning, data visualization, and storytelling.
+        Actively learning to become a well-rounded data scientist.
+    </p>
+
+    <h2>PROJECT EXPERIENCE</h2>
+    <hr>
+
+    <h3>Banking Fraud Detection (Python, R)</h3>
+    <p><strong>March 2024 - April 2024</strong></p>
+    <ul>
+        <li>Technologies: Isolation Forest, Random Forest, Time-Series Visuals</li>
+        <li>Built supervised and unsupervised models using c_transaction_cleaned and c_fraud_alerts data.</li>
+        <li>Created engaging dashboards with heatmaps and time-series visualizations.</li>
+        <li>Applied OOP for model modularization and data loading.</li>
+    </ul>
+
+    <h3>Marketing Campaign Analysis (R)</h3>
+    <p><strong>September 2024 - October 2024</strong></p>
+    <ul>
+        <li>Technologies: Logistic Regression, Naive Bayes, XGBoost</li>
+        <li>Combined customer, campaign, and response data for a classification model.</li>
+        <li>Created heatmaps and funnel plots to visualize conversion and channel performance.</li>
+        <li>Deployed results in Shiny and prepared a Power BI dashboard version.</li>
+    </ul>
+
+    <h3>Loan Default Prediction (R)</h3>
+    <p><strong>October 2024</strong></p>
+    <ul>
+        <li>Technologies: Logistic Regression, XGBoost, SHAP</li>
+        <li>Used credit scores, loan, customer, and fraud alert data for classification.</li>
+        <li>Visualized feature importance using SHAP and ROC/AUC curves.</li>
+    </ul>
+
+    <h3>Customer Churn Prediction (R, SQL)</h3>
+    <p><strong>December 2024</strong></p>
+    <ul>
+        <li>Technologies: Feature Engineering, Stratified Sampling, ROC Curve</li>
+        <li>Merged account, transaction, and campaign response data.</li>
+        <li>Applied classification models to identify at-risk customers.</li>
+    </ul>
+
+    <h3>Web App: dataseewep (Data Analyzer) (Python, Flask)</h3>
+    <p><strong>February 2025 - June 2025</strong></p>
+    <ul>
+        <li>Developed a Flask app to upload, analyze, and export data to PDF.</li>
+        <li>Implemented user authentication, file management, and model prediction.</li>
+    </ul>
+
+    <h2>EDUCATION</h2>
+    <hr>
+    <ul>
+        <li><strong>Kasem Bundit University</strong> – Digital Technology Innovation, Thailand, Bangkok (June 2024 - Present)</li>
+        <li><strong>High School – GED (General Education Development)</strong>, Myanmar, Yangon, YIUS (February 2023)</li>
+    </ul>
+
+    <h2>LEADERSHIP EXPERIENCE</h2>
+    <hr>
+
+    <h3>Futsal Team Play Leader – University Sports Day Champion</h3>
+    <p><strong>August 2024</strong></p>
+    <p>Led and coordinated the university futsal team to victory during Sports Day, fostering teamwork and strategic gameplay.</p>
+
+    <h3>Vice President – Christian Community, University</h3>
+    <p><strong>January 2025 - Present</strong></p>
+    <p>Supported the spiritual and social growth of student members by organizing weekly fellowship sessions, events, and outreach programs. Served as a bridge between students and faculty for community engagement.</p>
+
+    <h2>SKILLS AND INTERESTS</h2>
+    <hr>
+    <ul>
+        <li><strong>Languages:</strong> Native: Burmese, Fluent: English, Conversational: Thai</li>
+        <li><strong>Technical Skills:</strong>
+            <span class="badge">Python</span>
+            <span class="badge">R</span>
+            <span class="badge">SQL</span>
+            <span class="badge">HTML</span>
+            <span class="badge">CSS</span>
+            <span class="badge">JavaScript</span>
+            <span class="badge">Flutter</span>
+        </li>
+        <li><strong>Interests:</strong> Soccer, Table Tennis, Chess, Gaming, Guitar</li>
+    </ul>
+
+    <h2>REFERENCE</h2>
+    <hr>
+    <p><strong>Penjuree Kanthawongs</strong></p>
+    <p>Voice Director for Administrative Affairs, BBA International Program, Kasem Bundit University</p>
+    <p>Email: penjuree.kan@kbu.ac.th</p>
+
+</body>
+</html>

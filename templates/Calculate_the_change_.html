@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Change Calculator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Mobile friendly -->
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      margin: 0;
+      padding: 20px;
+      color: #2c3e50;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 26px;
+      margin-bottom: 20px;
+      color: #34495e;
+    }
+
+    .back-btn {
+      display: inline-block;
+      padding: 12px 20px;
+      background: #2c3e50;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      transition: background 0.3s;
+    }
+    .back-btn:hover {
+      background: #34495e;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      font-size: 18px;
+      margin: 12px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+
+    button {
+      background: #2c3e50;
+      color: white;
+      border: none;
+      padding: 14px;
+      font-size: 18px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #34495e;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 20px;
+      font-weight: bold;
+      text-align: left;
+      padding: 15px;
+      border-radius: 8px;
+      background: #ecf0f1;
+    }
+
+    .denomination {
+      margin: 6px 0;
+      font-size: 18px;
+      color: #2c3e50;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+      h1 {
+        font-size: 22px;
+      }
+      input, button {
+        font-size: 16px;
+        padding: 12px;
+      }
+      #result {
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="{{ url_for('portfolio') }}" class="back-btn">Back to Home</a>
+    <h1>💰 Change Calculator</h1>
+
+    <input
+      type="number"
+      id="amount"
+      placeholder="Enter Amount (฿)"
+      min="0">
+
+    <button onclick="calculateChange()">Submit</button>
+
+    <div id="result"></div>
+  </div>
+
+  <script>
+    function calculateChange() {
+      const amount = parseInt(document.getElementById('amount').value);
+      const resultElement = document.getElementById('result');
+      resultElement.innerHTML = "";
+
+      if (isNaN(amount) || amount < 0) {
+        resultElement.innerHTML = "⚠️ Please enter a valid positive number";
+        resultElement.style.color = "red";
+        return;
+      }
+
+      resultElement.style.color = "#2c3e50"; // reset to normal text color
+      const denominations = [500, 100, 50, 20, 10, 5, 1];
+      let remaining = amount;
+
+      denominations.forEach(denom => {
+        const count = Math.floor(remaining / denom);
+        if (count > 0) {
+          const line = document.createElement("div");
+          line.className = "denomination";
+          line.textContent = `${count} × ฿${denom}`;
+          resultElement.appendChild(line);
+          remaining %= denom;
+        }
+      });
+    }
+
+    // Press Enter to submit
+    document.getElementById('amount').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        calculateChange();
+      }
+    });
+  </script>
+</body>
+</html>

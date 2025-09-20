@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hobbies - Sut Zaw Aung</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        a {
+            color: #1a73e8;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        h1, h2, h3 {
+            color: #1a1a1a;
+            margin-bottom: 5px;
+        }
+
+        hr {
+            border: none;
+            height: 1px;
+            background-color: #ccc;
+            margin: 10px 0 20px 0;
+        }
+
+        ul {
+            margin-left: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header p {
+            margin: 3px 0;
+        }
+
+        h2 {
+            background-color: #e0e7ff;
+            padding: 8px 15px;
+            border-left: 5px solid #4f46e5;
+            margin-top: 30px;
+        }
+
+        h3 {
+            margin-top: 15px;
+        }
+
+        ul li {
+            padding: 5px 0;
+            transition: 0.3s;
+        }
+
+        ul li:hover {
+            background-color: #f0f4ff;
+            border-left: 3px solid #4f46e5;
+            padding-left: 10px;
+        }
+
+        .badge {
+            background-color: #4f46e5;
+            color: white;
+            padding: 3px 8px;
+            margin-right: 5px;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+
+        /* Back button */
+        .back-btn {
+            display: inline-block;
+            padding: 8px 16px;
+            background: #2c3e50;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: background 0.3s;
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            font-size: 14px;
+        }
+        .back-btn:hover {
+            background: #34495e;
+        }
+    </style>
+</head>
+<body>
+
+    <a href="{{ url_for('portfolio') }}" class="back-btn">Back to Home</a>
+
+    <div class="header">
+        <h1>HOBBIES</h1>
+        <h1>By Sut Zaw Aung</h1>
+    </div>
+
+    <h2>SPORTS</h2>
+    <hr>
+    <ul>
+        <li><strong>Soccer:</strong> Playing soccer is one of my favorite ways to stay active and build teamwork. I enjoy both casual games and competitive matches. It teaches me discipline, strategy, and quick decision-making on the field.</li>
+        <li><strong>Table Tennis:</strong> I love the speed and focus required in table tennis. It sharpens my reflexes and helps me unwind while still staying mentally sharp.</li>
+    </ul>
+
+    <h2>GAMES & STRATEGY</h2>
+    <hr>
+    <ul>
+        <li><strong>Chess:</strong> Chess challenges my mind and pushes me to think several steps ahead. I enjoy practicing different openings and solving puzzles to improve my strategic thinking.</li>
+        <li><strong>Video Games:</strong> Playing games helps me relax and engage with interactive storytelling and logic-based challenges. I often explore games that require creativity and critical thinking.</li>
+    </ul>
+
+    <h2>MUSIC</h2>
+    <hr>
+    <ul>
+        <li><strong>Guitar:</strong> Playing the guitar is a creative outlet for me. I enjoy learning new songs, playing melodies by ear, and using music as a way to connect with others and express myself.</li>
+    </ul>
+
+    <h2>DATA EXPLORATION</h2>
+    <hr>
+    <ul>
+        <li><strong>Data Analysis:</strong> I genuinely enjoy exploring datasets, finding insights, and building visualizations that tell powerful stories. Working with data gives me a sense of purpose and excitement.</li>
+        <li><strong>Prediction & Modeling:</strong> I like applying machine learning models to make real-world predictions—whether for fraud detection, customer churn, or marketing success. It feels like solving a meaningful puzzle.</li>
+    </ul>
+
+</body>
+</html>
